@@ -258,19 +258,19 @@ if (@$_SESSION['Admin']) {
 										<li class="nav-item">
 											<a href="?page=data-tampilabsensi" class="nav-link">
 												<i class="nav-icon  fas fa-tint text-danger"></i>
-												<p class="">Absensi Datang</p>
+												<p class="">Absensi Karyawan</p>
 											</a>
 										</li>
 									</ul>
 
-									<ul class="nav nav-treeview">
+									<!-- <ul class="nav nav-treeview">
 										<li class="nav-item">
 											<a href="?page=data-tampilabsensipulang" class="nav-link">
 												<i class="nav-icon  fas fa-tint text-danger"></i>
 												<p class="">Absensi Pulang</p>
 											</a>
 										</li>
-									</ul>
+									</ul> -->
 
 									<ul class="nav nav-treeview">
 										<li class="nav-item">

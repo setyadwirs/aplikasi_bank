@@ -1,20 +1,26 @@
 <?php
 include "../../inc/koneksi.php";
 
-if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
-    $start_date = mysqli_real_escape_string($koneksi, $_GET['start_date']);
-    $end_date = mysqli_real_escape_string($koneksi, $_GET['end_date']);
+// Ambil parameter dari URL jika ada
+$start_date = isset($_GET['start_date']) ? mysqli_real_escape_string($koneksi, $_GET['start_date']) : '';
+$end_date = isset($_GET['end_date']) ? mysqli_real_escape_string($koneksi, $_GET['end_date']) : '';
+$nik = isset($_GET['nik']) ? mysqli_real_escape_string($koneksi, $_GET['nik']) : '';
 
-    $select_sql = mysqli_query($koneksi, "SELECT tb_konsumsi.*, tb_karyawan.nama_karyawan 
-                                          FROM tb_konsumsi 
-                                          JOIN tb_karyawan ON tb_konsumsi.nik = tb_karyawan.nik
-                                          WHERE tb_konsumsi.tanggal_pulang BETWEEN '$start_date' AND '$end_date'");
-} else {
-    // Jika tidak ada filter tanggal yang diberikan, ambil semua data transaksi
-    $select_sql = mysqli_query($koneksi, "SELECT tb_konsumsi.*, tb_karyawan.nama_karyawan 
-                                          FROM tb_konsumsi 
-                                          JOIN tb_karyawan ON tb_konsumsi.nik = tb_karyawan.nik");
+// Query SQL untuk memfilter data
+$query = "SELECT tb_konsumsi.*, tb_karyawan.nama_karyawan 
+          FROM tb_konsumsi 
+          JOIN tb_karyawan ON tb_konsumsi.nik = tb_karyawan.nik
+          WHERE 1=1";
+
+if ($start_date && $end_date) {
+    $query .= " AND tb_konsumsi.tanggal_pulang BETWEEN '$start_date' AND '$end_date'";
 }
+
+if ($nik) {
+    $query .= " AND tb_konsumsi.nik = '$nik'";
+}
+
+$select_sql = mysqli_query($koneksi, $query);
 
 $totalDanaKonsumsi = 0;
 ?>

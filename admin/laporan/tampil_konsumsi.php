@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">
-            <i class=""></i> Laporan Absensi
+            <i class=""></i> Laporan Konsumsi Karyawan
         </h3>
     </div>
     <!-- /.card-header -->
@@ -36,21 +36,21 @@
 
                         <div class="row">
                             <div class="col-md-3 text-right">
-                                <form method="GET" action="admin/konsumsi/cetak_filter.php">
+                                <form method="GET" target="_blank" action="admin/konsumsi/cetak_filter.php">
                                     <input class="form-control" type="date" name="start_date" id="start_date" value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>">
                             </div>
                             <div class="col-md-3 text-right">
                                 <input class="form-control" type="date" name="end_date" id="end_date" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>">
                             </div>
                             <div class="col-md-3 text-right">
-                                <select class="form-control" name="id_karyawan">
+                                <select class="form-control" name="nik">
                                     <option value="">-- Pilih Nama Karyawan --</option>
                                     <?php
                                     include "inc/koneksi.php";
                                     $query_karyawan = mysqli_query($koneksi, "SELECT * FROM tb_karyawan") or die(mysqli_error($koneksi));
                                     while ($data_karyawan = mysqli_fetch_array($query_karyawan)) {
                                     ?>
-                                        <option value="<?php echo $data_karyawan['id_karyawan']; ?>"><?php echo $data_karyawan['nama_karyawan']; ?></option>
+                                        <option value="<?php echo $data_karyawan['nik']; ?>"><?php echo $data_karyawan['nama_karyawan']; ?></option>
                                     <?php
                                     }
                                     ?>

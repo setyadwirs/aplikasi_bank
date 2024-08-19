@@ -1,4 +1,3 @@
-
 <div class="card card-info">
 	<div class="card-header">
 		<h3 class="card-title">
@@ -25,22 +24,25 @@
 						<th>Alasan Cuti</th>
 						<th>Surat Cuti</th>
 						<th>Status</th>
+						<th>Komentar</th> <!-- Tambahkan kolom untuk alasan_status -->
 					</tr>
 				</thead>
 				<tbody>
 					<?php
 					$no = 1;
 					// Query untuk mengambil data dari tabel tb_cuti
-					$nik = $_SESSION['nik']; // Ambil id_pengguna dari session
+					$nik = $_SESSION['nik']; // Ambil nik dari session
 
-					$sql = $koneksi->query("SELECT * FROM tb_cuti JOIN tb_karyawan ON tb_cuti.nik = tb_karyawan.nik 
-					WHERE tb_cuti.nik = '$nik'");
+					$sql = $koneksi->query("SELECT tb_cuti.*, tb_karyawan.nama_karyawan 
+                                            FROM tb_cuti 
+                                            JOIN tb_karyawan ON tb_cuti.nik = tb_karyawan.nik 
+                                            WHERE tb_cuti.nik = '$nik'");
 					while ($data = $sql->fetch_assoc()) {
 					?>
 						<tr>
 							<td><?= $no++; ?></td>
-							<td><?php echo $rew['nik']; ?></td>
-							<td><?php echo $rew['nama_karyawan']; ?></td>
+							<td><?php echo $data['nama_karyawan']; ?></td>
+							<td><?php echo $data['nik']; ?></td>
 							<td><?php echo $data['tanggal_mulai']; ?></td>
 							<td><?php echo $data['tanggal_sampai']; ?></td>
 							<td><?php echo $data['alasan_cuti']; ?></td>
@@ -50,6 +52,7 @@
 								</a>
 							</td>
 							<td><?php echo $data['status']; ?></td>
+							<td><?php echo $data['alasan_status']; ?></td> <!-- Menampilkan alasan_status -->
 						</tr>
 					<?php
 					}

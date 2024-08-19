@@ -14,10 +14,10 @@
 	<div class="card-body">
 		<div class="table-responsive">
 			<!-- <div>
-				<a href="?page=tambah-pinjaman" class="btn btn-warning">
-					<i class="fa fa-edit"></i> Tambah Data
-				</a>
-			</div> -->
+                <a href="?page=tambah-pinjaman" class="btn btn-warning">
+                    <i class="fa fa-edit"></i> Tambah Data
+                </a>
+            </div> -->
 			<br>
 			<!-- Menampilkan Gambar Brosur -->
 			<div id="imageContainer" class="text-center mb-3" style="display: none;">
@@ -38,17 +38,25 @@
 						<th>Email</th>
 						<th>Tanggal Pengajuan</th>
 						<th>Jumlah Pinjaman</th>
+						<th>Jaminan</th>
 						<th>Keperluan</th>
+						<th>Tanggal Survei</th>
+						<th>Status Survei</th>
 						<th>Status Pengajuan</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
 					$no = 1;
-					$sql = $koneksi->query("SELECT * FROM tb_pinjaman");
+					$nik = $_SESSION['nik']; // Ambil NIK dari session
+
+					// Query untuk mengambil data dari tabel tb_pinjaman sesuai NIK pengguna
+					$sql = $koneksi->query("SELECT * FROM tb_pinjaman WHERE nik = '$nik'");
+
 					if ($sql === false) {
 						die("Query error: " . $koneksi->error);
 					}
+
 					while ($data = $sql->fetch_assoc()) {
 					?>
 						<tr>
@@ -58,7 +66,29 @@
 							<td><?php echo htmlspecialchars($data['email']); ?></td>
 							<td><?php echo htmlspecialchars($data['tanggal_pengajuan']); ?></td>
 							<td><?php echo htmlspecialchars($data['jumlah_pinjaman']); ?></td>
+							<td><?php echo htmlspecialchars($data['jaminan']); ?></td>
+
 							<td><?php echo htmlspecialchars($data['keperluan']); ?></td>
+							<td><?php echo htmlspecialchars($data['tanggal_survei']); ?></td>
+							<td>
+								<?php
+								$status = $data['status_survei'];
+								$button_class = '';
+								switch ($status) {
+									case 'Disurvei':
+										$button_class = 'btn btn-primary btn-sm';
+										break;
+									case 'Belum Disurvei':
+										$button_class = 'btn btn-success btn-sm';
+										break;
+								
+									default:
+										$button_class = 'btn btn-secondary btn-sm';
+										break;
+								}
+								?>
+								<button class="<?php echo $button_class; ?>" disabled><?php echo htmlspecialchars($status); ?></button>
+							</td>
 							<td>
 								<?php
 								$status = $data['status_pengajuan'];

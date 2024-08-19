@@ -1,8 +1,8 @@
 <?php
 
-
+$nik = $_SESSION['nik']; // Ambil NIK dari session
 // Ambil data pengajuan yang disetujui
-$query = "SELECT * FROM tb_pinjaman WHERE status_pengajuan = 'Disetujui'";
+$query = "SELECT * FROM tb_pinjaman  WHERE nik = '$nik'";
 $result = mysqli_query($koneksi, $query);
 
 if (mysqli_num_rows($result) > 0) {
@@ -76,8 +76,15 @@ if (mysqli_num_rows($result) > 0) {
                 <?php foreach ($notifications as $notification) : ?>
                     <div class="notification">
                         <p class="notification-title">Pengajuan ID: <?php echo htmlspecialchars($notification['id_pinjaman']); ?></p>
-                        <p class="notification-body">Status: <?php echo htmlspecialchars($notification['status_pengajuan']); ?></p>
-                        <p class="notification-body">Tanggal: <?php echo htmlspecialchars($notification['tanggal_pengajuan']); ?></p>
+                        
+                        <p class="notification-body">Tanggal Survei: <?php echo htmlspecialchars($notification['tanggal_survei']); ?></p>
+                        <p class="notification-body">Status Survei: <?php echo htmlspecialchars($notification['status_survei']); ?></p>
+
+                        
+                        <p class="notification-body">Status Pengajuan: <?php echo htmlspecialchars($notification['status_pengajuan']); ?></p>
+
+                        <p class="notification-body">Komentar : <?php echo htmlspecialchars($notification['alasan_status']); ?></p>
+                        <p class="notification-body">Tanggal Pengajuan: <?php echo htmlspecialchars($notification['tanggal_pengajuan']); ?></p>
                         <div class="notification-footer">
                             <small>Ditampilkan pada <?php echo date('d M Y H:i:s'); ?></small>
                         </div>

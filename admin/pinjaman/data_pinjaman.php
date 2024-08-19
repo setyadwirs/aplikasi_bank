@@ -23,6 +23,9 @@
 						<th>Tanggal Pengajuan</th>
 						<th>Jumlah Pinjaman</th>
 						<th>Keperluan</th>
+						<th>Jaminan</th>
+						<th>Tanggal Survei</th>
+						<th>Status Survei</th>
 						<th>Status Pengajuan</th>
 						<th>Aksi</th>
 					</tr>
@@ -59,6 +62,17 @@
 							</td>
 
 							<td>
+								<?php echo $data['jaminan']; ?>
+							</td>
+							<td>
+								<?php echo $data['tanggal_survei']; ?>
+							</td>
+							<td>
+								<?php echo $data['status_survei']; ?>
+							</td>
+
+
+							<td>
 								<?php
 								$status = $data['status_pengajuan'];
 								$button_class = '';
@@ -84,7 +98,7 @@
 							<td>
 
 								<a href="?page=edit-pinjaman&kode=<?php echo $data['id_pinjaman']; ?>" title="Ubah" class="btn btn-warning btn-sm">
-									<b class="fa fa-edit"></b>
+									<b class="fa fa-edit"> Status Pinjaman</b>
 								</a>
 								<a href="?page=hapus-pinjaman&kode=<?php echo $data['id_pinjaman']; ?>" onclick="return confirm('Apakah anda yakin hapus data ini ?')" title="Hapus" class="btn btn-danger btn-sm">
 									<b class="fa fa-trash"></b>

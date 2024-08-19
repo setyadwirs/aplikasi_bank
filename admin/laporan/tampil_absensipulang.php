@@ -33,7 +33,7 @@
 
 						<div class="row">
 							<div class="col-md-3 text-right">
-								<form method="GET" action="admin/absensipulang/cetak_filter.php">
+								<form method="GET" target="_blank" action="admin/absensipulang/cetak_filter.php">
 									<input class="form-control" type="date" name="start_date" id="start_date" value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>">
 							</div>
 							<div class="col-md-3 text-right">

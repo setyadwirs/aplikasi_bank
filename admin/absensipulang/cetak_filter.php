@@ -1,7 +1,18 @@
 <?php include "../../inc/koneksi.php";
 
-$sql = "SELECT * FROM tb_cuti tb_cuti JOIN tb_karyawan ON tb_cuti.nik = tb_karyawan.nik ";
-$query = mysqli_query($koneksi, $sql);
+if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
+    $start_date = $_GET['start_date'];
+    $end_date = $_GET['end_date'];
+
+    $select_sql = mysqli_query($koneksi, "SELECT * FROM tb_absensipulang JOIN tb_karyawan ON tb_absensipulang.nik = tb_karyawan.nik
+                                          WHERE tb_absensipulang.tanggal_pulang BETWEEN '$start_date' AND '$end_date'");
+} else {
+    // Jika tidak ada filter tanggal yang diberikan, ambil semua data transaksi
+    $select_sql = mysqli_query($koneksi, "SELECT * FROM tb_absensipulang JOIN tb_karyawan ON tb_absensipulang.nik = tb_karyawan.nik");
+}
+?>
+
+<?php include "../../inc/koneksi.php";
 
 $bln = array(
     '01' => 'Januari',
@@ -33,7 +44,7 @@ $bln = array(
 <head>
     <title>BANK KALSEL</title>
 
-    <link rel="shortcut icon" href="../../dist/img/logo.png">
+    <link rel="shortcut icon" href="../../dist/img/favicon.png">
 </head>
 
 <body>
@@ -50,10 +61,7 @@ $bln = array(
         </b></p>
 
     <h3>
-        <center>
-            LAPORAN DATA CUTI<br>
-            <!-- <small style="font-size: 12px;"><?php echo $mulaitgl . ' s/d ' . $akhirtgl; ?></small> -->
-        </center>
+        <h3 align="center" style="font-size: 16px;"><u>LAPORAN DATA ABSEN PULANG <br> <?php echo strtoupper(tgl_indo($start_date)); ?> SAMPAI DENGAN <?php echo strtoupper(tgl_indo($end_date)); ?></u> <br> </h3>
     </h3>
     <div class="row">
         <div class="col-sm-12">
@@ -63,37 +71,32 @@ $bln = array(
                         <tr style="background-color: darkgrey" height="30px">
 
                             <th style="text-align: center; font-size: 18px;">No </th>
-                            <th style="text-align: center; font-size: 18px;">Nama Karyawan</th>
-                            <th style="text-align: center; font-size: 18px;">NIK</th>
-                            <th style="text-align: center; font-size: 18px;">Tanggal Mulai</th>
-                            <th style="text-align: center; font-size: 18px;">Tanggal Sampai</th>
-                            <th style="text-align: center; font-size: 18px;">Alasan Cuti</th>
-                            <th style="text-align: center; font-size: 18px;">Surat Cuti</th>
+                            <th style="text-align: center; font-size: 18px;">Nik </th>
+                            <th style="text-align: center; font-size: 18px;">Nama Karyawan </th>
+                            <th style="text-align: center; font-size: 18px;">Jam Pulang </th>
+                           
+                            <th style="text-align: center; font-size: 18px;">Tanggal Pulang</th>
+                        
                             <th style="text-align: center; font-size: 18px;">Status</th>
 
 
+                        </tr>
                     </thead>
 
                     <tbody>
                         <?php
                         $no = 1;
-                        while ($data = mysqli_fetch_array($query, MYSQLI_BOTH)) {
+                        while ($data = mysqli_fetch_array($select_sql)) {
                         ?>
                             <tr>
                                 <td align="center"><?php echo $no++  ?></td>
-
-                                <td lign="center"><?php echo htmlspecialchars($data['nama_karyawan']); ?></td>
-                                <td lign="center"><?php echo htmlspecialchars($data['nik']); ?></td>
-                                <td lign="center"><?php echo htmlspecialchars($data['tanggal_mulai']); ?></td>
-                                <td lign="center"><?php echo htmlspecialchars($data['tanggal_sampai']); ?></td>
-                                <td lign="center"><?php echo htmlspecialchars($data['alasan_cuti']); ?></td>
-                                <td lign="center">
-                                    <a class="btn btn-success" href="./foto/<?php echo htmlspecialchars($data['foto']); ?>" target="_blank">
-                                        Lihat file
-                                    </a>
-                                </td>
-                                <td><?php echo htmlspecialchars($data['status']); ?></td>
-
+                                <td align="center"><?php echo $data['nik']; ?></td>
+                                <td align="center"><?php echo $data['nama_karyawan']; ?></td>
+                                <td align="center"><?php echo $data['jam_pulang']; ?></td>
+                              
+                                <td align="center"><?php echo $data['tanggal_pulang']; ?></td>
+                              
+                                <td align="center"><?php echo $data['status']; ?></td>
 
                             </tr>
                         <?php } ?>

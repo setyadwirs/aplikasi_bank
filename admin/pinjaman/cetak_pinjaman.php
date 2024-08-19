@@ -59,6 +59,7 @@ $totalDanaKonsumsi = 0; // Inisialisasi variabel total dana konsumsi
                             <th style="text-align: center; font-size: 18px;">Tanggal Pengajuan</th>
                             <th style="text-align: center; font-size: 18px;">Jumlah Pinjaman</th>
                             <th style="text-align: center; font-size: 18px;">Keperluan</th>
+                            <th style="text-align: center; font-size: 18px;">Status Survei</th>
                             <th style="text-align: center; font-size: 18px;">Status Pengajuan</th>
                         </tr>
                     </thead>
@@ -75,6 +76,7 @@ $totalDanaKonsumsi = 0; // Inisialisasi variabel total dana konsumsi
                                 <td><?php echo $data['tanggal_pengajuan']; ?></td>
                                 <td><?php echo number_format($data['jumlah_pinjaman'], 0, ',', '.'); ?></td>
                                 <td><?php echo $data['keperluan']; ?></td>
+                                <td><?php echo $data['status_survei']; ?></td>
                                 <td>
                                     <?php
                                     $status = $data['status_pengajuan'];

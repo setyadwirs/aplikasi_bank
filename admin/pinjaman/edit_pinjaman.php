@@ -1,90 +1,13 @@
 <?php
-include "inc/koneksi.php";
-
-// Fungsi untuk membersihkan input
-function clean_input($data)
-{
-    global $koneksi;
-    return mysqli_real_escape_string($koneksi, trim($data));
-}
+// Pastikan koneksi ke database sudah ada
 
 if (isset($_GET['kode'])) {
-    $kode = clean_input($_GET['kode']);
-    $sql_cek = "SELECT * FROM tb_pinjaman WHERE id_pinjaman = ?";
-    $stmt = mysqli_prepare($koneksi, $sql_cek);
-    mysqli_stmt_bind_param($stmt, "s", $kode);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    if (mysqli_num_rows($result) > 0) {
-        $data_pinjaman = mysqli_fetch_assoc($result);
-    } else {
-        echo "Data pinjaman tidak ditemukan.";
-        exit;
-    }
-} else {
-    echo "Parameter kode tidak ditemukan.";
-    exit;
-}
-
-if (isset($_POST['Ubah'])) {
-    $nama_nasabah = clean_input($_POST['nama_nasabah']);
-    $nik = clean_input($_POST['nik']);
-    $email = clean_input($_POST['email']);
-    $tanggal_pengajuan = clean_input($_POST['tanggal_pengajuan']);
-    $jumlah_pinjaman = clean_input($_POST['jumlah_pinjaman']);
-    $keperluan = clean_input($_POST['keperluan']);
-    $status_pengajuan = clean_input($_POST['status_pengajuan']);
-    $alasan_status = clean_input($_POST['alasan_status']);
-
-    $sql_ubah = "UPDATE tb_pinjaman SET 
-        nama_nasabah=?, nik=?, email=?, tanggal_pengajuan=?, 
-        jumlah_pinjaman=?, keperluan=?, status_pengajuan=?, alasan_status=? 
-        WHERE id_pinjaman=?";
-
-    $stmt = mysqli_prepare($koneksi, $sql_ubah);
-    mysqli_stmt_bind_param(
-        $stmt,
-        "ssssdssss",
-        $nama_nasabah,
-        $nik,
-        $email,
-        $tanggal_pengajuan,
-        $jumlah_pinjaman,
-        $keperluan,
-        $status_pengajuan,
-        $alasan_status,
-        $kode
-    );
-
-    $query_ubah = mysqli_stmt_execute($stmt);
-
-    if ($query_ubah) {
-        $alert_title = 'Ubah Data Berhasil';
-        $alert_text = 'Data pinjaman telah diperbarui.';
-        $alert_icon = 'success';
-    } else {
-        $alert_title = 'Ubah Data Gagal';
-        $alert_text = 'Terjadi kesalahan saat memperbarui data.';
-        $alert_icon = 'error';
-    }
-    echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js'></script>
-    <script>
-        Swal.fire({
-            title: '$alert_title',
-            text: '$alert_text',
-            icon: '$alert_icon',
-            confirmButtonText: 'OK'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location = 'index.php?page=data-pinjaman';
-            }
-        });
-    </script>";
+    $sql_cek = "SELECT * FROM tb_pinjaman WHERE id_pinjaman='" . mysqli_real_escape_string($koneksi, $_GET['kode']) . "'";
+    $query_cek = mysqli_query($koneksi, $sql_cek);
+    $data_pinjaman = mysqli_fetch_array($query_cek, MYSQLI_BOTH);
 }
 ?>
 
-<!-- Bagian HTML untuk formulir -->
 <!DOCTYPE html>
 <html lang="id">
 
@@ -105,6 +28,7 @@ if (isset($_POST['Ubah'])) {
         </div>
         <form action="" method="post" enctype="multipart/form-data">
             <div class="card-body">
+                <!-- Existing fields -->
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Nama Nasabah</label>
                     <div class="col-sm-6">
@@ -148,6 +72,25 @@ if (isset($_POST['Ubah'])) {
                 </div>
 
                 <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Tanggal Survei</label>
+                    <div class="col-sm-6">
+                        <input type="date" class="form-control" id="tanggal_survei" name="tanggal_survei" rows="3" value="<?php echo htmlspecialchars($data_pinjaman['tanggal_survei']); ?>"></input>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Status Survei</label>
+                    <div class="col-sm-6">
+                        <select name="status_survei" id="status_survei" class="form-control">
+                            <option value="Belum Disurvei" <?php if ($data_pinjaman['status_survei'] == 'Belum Disurvei') echo 'selected'; ?>>Belum Disurvei</option>
+                            <option value="Proses Disurvei" <?php if ($data_pinjaman['status_survei'] == 'Proses Disurvei') echo 'selected'; ?>>Proses Disurvei</option>
+                            <option value="Disurvei" <?php if ($data_pinjaman['status_survei'] == 'Disurvei') echo 'selected'; ?>>Telah Disurvei</option>
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Status Pengajuan</label>
                     <div class="col-sm-6">
                         <select name="status_pengajuan" id="status_pengajuan" class="form-control">
@@ -170,6 +113,46 @@ if (isset($_POST['Ubah'])) {
             </div>
         </form>
     </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 </body>
 
 </html>
+
+<?php
+if (isset($_POST['Ubah'])) {
+    $sql_ubah = "UPDATE tb_pinjaman SET
+            nama_nasabah='" . mysqli_real_escape_string($koneksi, $_POST['nama_nasabah']) . "',
+            nik='" . mysqli_real_escape_string($koneksi, $_POST['nik']) . "',
+            email='" . mysqli_real_escape_string($koneksi, $_POST['email']) . "',
+            tanggal_pengajuan='" . mysqli_real_escape_string($koneksi, $_POST['tanggal_pengajuan']) . "',
+            jumlah_pinjaman='" . mysqli_real_escape_string($koneksi, $_POST['jumlah_pinjaman']) . "',
+            keperluan='" . mysqli_real_escape_string($koneksi, $_POST['keperluan']) . "',
+            tanggal_survei='" . mysqli_real_escape_string($koneksi, $_POST['tanggal_survei']) . "',
+            status_survei='" . mysqli_real_escape_string($koneksi, $_POST['status_survei']) . "',
+            status_pengajuan='" . mysqli_real_escape_string($koneksi, $_POST['status_pengajuan']) . "',
+            alasan_status='" . mysqli_real_escape_string($koneksi, $_POST['alasan_status']) . "'
+            WHERE id_pinjaman='" . mysqli_real_escape_string($koneksi, $_GET['kode']) . "'";
+
+    $query_ubah = mysqli_query($koneksi, $sql_ubah);
+
+    if ($query_ubah) {
+        echo "<script>
+        Swal.fire({title: 'Ubah Data Berhasil',text: '',icon: 'success',confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.value) {
+                window.location = 'index.php?page=data-pinjaman';
+            }
+        })</script>";
+    } else {
+        echo "<script>
+        Swal.fire({title: 'Ubah Data Gagal',text: '',icon: 'error',confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.value) {
+                window.location = 'index.php?page=data-pinjaman';
+            }
+        })</script>";
+    }
+}
+?>

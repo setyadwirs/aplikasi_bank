@@ -6,25 +6,24 @@
     </div>
     <form action="" method="post">
         <div class="card-body">
-
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nama Nasabah</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="nama_nasabah" value="  <?php echo $rew['nama_nasabah']; ?>" readonly>
+                    <input type="text" class="form-control" name="nama_nasabah" value="<?php echo $rew['nama_nasabah']; ?>" readonly>
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Nik</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="nik" value="  <?php echo $rew['nik']; ?>" readonly>
+                    <input type="text" class="form-control" name="nik" value="<?php echo $rew['nik']; ?>" readonly>
                 </div>
             </div>
 
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Email</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="email" name="email" value="  <?php echo $rew['email']; ?>" readonly>
+                    <input type="text" class="form-control" id="email" name="email" value="<?php echo $rew['email']; ?>" readonly>
                 </div>
             </div>
 
@@ -50,15 +49,20 @@
             </div>
 
             <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Jaminan</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="jaminan" name="jaminan" placeholder="Jaminan" required>
+                </div>
+            </div>
+
+            <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Status Pengajuan</label>
                 <div class="col-sm-6">
                     <select name="status_pengajuan" id="status_pengajuan" class="form-control">
                         <option value="Diajukan">Diajukan</option>
-                      
                     </select>
                 </div>
             </div>
-
         </div>
         <div class="card-footer">
             <input type="submit" name="Simpan" value="Simpan" class="btn btn-warning">
@@ -67,11 +71,11 @@
     </form>
 </div>
 
+
 <?php
 if (isset($_POST['Simpan'])) {
     // Koneksi ke database
-
-
+   
     // Mengambil data dari form
     $nama_nasabah = $_POST['nama_nasabah'];
     $nik = $_POST['nik'];
@@ -79,11 +83,18 @@ if (isset($_POST['Simpan'])) {
     $tanggal_pengajuan = $_POST['tanggal_pengajuan'];
     $jumlah_pinjaman = $_POST['jumlah_pinjaman'];
     $keperluan = $_POST['keperluan'];
+    $jaminan = $_POST['jaminan'];
+    $tanggal_survei = '';
+    $status_survei = '';
+   
     $status_pengajuan = $_POST['status_pengajuan'];
 
+    // Jika alasan_status tidak ada di form, maka tetapkan sebagai kosong
+    $alasan_status = isset($_POST['alasan_status']) ? $_POST['alasan_status'] : '';
+
     // Query untuk menyimpan data pinjaman
-    $sql_simpan = "INSERT INTO tb_pinjaman (nama_nasabah, nik, email,tanggal_pengajuan, jumlah_pinjaman, keperluan, status_pengajuan) 
-                    VALUES ('$nama_nasabah', '$nik', '$email', '$tanggal_pengajuan', '$jumlah_pinjaman', '$keperluan', '$status_pengajuan')";
+    $sql_simpan = "INSERT INTO tb_pinjaman (nama_nasabah, nik, email, tanggal_pengajuan, jumlah_pinjaman, jaminan, keperluan, tanggal_survei,status_survei, status_pengajuan, alasan_status) 
+                    VALUES ('$nama_nasabah', '$nik', '$email', '$tanggal_pengajuan', '$jumlah_pinjaman', '$jaminan', '$keperluan', '$tanggal_survei', '$status_survei', '$status_pengajuan', '$alasan_status')";
 
     $query_simpan = mysqli_query($koneksi, $sql_simpan);
     mysqli_close($koneksi);
